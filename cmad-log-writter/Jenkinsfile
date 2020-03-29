@@ -1,0 +1,35 @@
+pipeline {
+  agent any
+  tools{
+    maven 'maven 3.6.1'
+  }
+  
+  stages{
+    stage("build"){
+      steps{
+        echo 'Compiling users app..'
+        dir('java/main'){
+          sh 'mvn compile'
+        }
+      }
+    }
+    stage("test"){
+      steps{
+        echo 'No testcases available'
+      }
+    }
+     stage("package"){
+      steps{
+        echo 'Packaging user app'
+        dir('java/main'){
+          sh 'mvn  package -DskipTests'
+        }
+      }
+    }
+  }
+  post{
+    always{
+      echo 'Writter compilation is complete...'
+    }
+  }
+}
