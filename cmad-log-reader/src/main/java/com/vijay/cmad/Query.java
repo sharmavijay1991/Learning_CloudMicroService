@@ -1,4 +1,4 @@
-package com.glarimy.cmad;
+package com.vijay.cmad;
 
 public class Query {
 	private String start_time;
