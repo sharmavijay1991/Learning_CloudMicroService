@@ -8,7 +8,7 @@ pipeline {
     stage("build"){
       steps{
         echo 'Compiling users app..'
-        dir('java/main'){
+        dir('cmad-log-writer'){
           sh 'mvn compile'
         }
       }
@@ -21,7 +21,7 @@ pipeline {
      stage("package"){
       steps{
         echo 'Packaging user app'
-        dir('java/main'){
+        dir('cmad-log-writer'){
           sh 'mvn  package -DskipTests'
         }
       }
@@ -29,7 +29,7 @@ pipeline {
   }
   post{
     always{
-      echo 'Writter compilation is complete...'
+      echo 'Writer compilation is complete...'
     }
   }
 }
