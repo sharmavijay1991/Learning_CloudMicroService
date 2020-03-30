@@ -1,5 +1,5 @@
 /*
-package com.glarimy.cmad;
+package com.vijay.cmad;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;

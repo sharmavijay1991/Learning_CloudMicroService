@@ -1,4 +1,4 @@
-package com.glarimy.cmad;
+package com.vijay.cmad;
 
 
 import org.springframework.data.annotation.Id;
