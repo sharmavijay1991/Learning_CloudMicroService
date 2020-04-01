@@ -1,0 +1,11 @@
+Author: VijaySharma (sharmavijay1991@gmail.com)
+
+Kindly follow the pages in below mentioned order:
+(i) Step_1_NewItem_Pipeline
+(ii) Step_2_Setting-Part-1
+(iii) Step_2_Setting-Part-2
+and on completion you will see:
+(iv) Final_Jenkins_Pipeline
+  -Here the path is marked and using another marked sign "Build Now" you can start the Jenkins task. (i.e. On demand trigger)
+  
+ 
