@@ -36,9 +36,9 @@ pipeline {
            {
         	  docker.withRegistry('https://index.docker.io/v1/', 'dockerlogin') 
         	  {
-        		  def usersImage = docker.build("sharmavijay1991/logwriter:v${env.BUILD_ID}", “cmad-log-writer”)
+        		  def usersImage = docker.build("sharmavijay1991/logwriter:v${env.BUILD_ID}", "cmad-log-writer")
         		  usersImage.push()
-        		  usersImage.push("latest")	
+        		  usersImage.push("latest")
         	  }
 		   }
 	    }

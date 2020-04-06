@@ -34,7 +34,7 @@ pipeline {
            {
         	  docker.withRegistry('https://index.docker.io/v1/', 'dockerlogin') 
         	  {
-        		  def usersImage = docker.build("sharmavijay1991/logreader:v${env.BUILD_ID}", “cmad-log-reader”)
+        		  def usersImage = docker.build("sharmavijay1991/logreader:v${env.BUILD_ID}", "cmad-log-reader")
         		  usersImage.push()
         		  usersImage.push("latest")
         	  }
