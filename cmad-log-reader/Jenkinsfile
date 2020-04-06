@@ -23,6 +23,7 @@ pipeline {
         echo 'Packaging user app'
         dir('cmad-log-reader'){
           sh 'mvn  package -DskipTests'
+          archiveArtifacts artifacts: 'cmad-log-reader/target/*.jar', fingerprint: true
         }
       }
     }
