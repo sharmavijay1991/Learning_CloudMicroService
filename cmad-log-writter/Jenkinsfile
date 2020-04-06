@@ -8,7 +8,7 @@ pipeline {
     stage("build"){
       steps{
         echo 'Compiling users app..'
-        dir('cmad-log-writer'){
+        dir('cmad-log-writter'){
           sh 'mvn compile'
         }
       }
