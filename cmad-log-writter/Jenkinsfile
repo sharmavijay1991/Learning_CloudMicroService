@@ -21,7 +21,7 @@ pipeline {
      stage("package"){
       steps{
         echo 'Packaging user app'
-        dir('cmad-log-writer'){
+        dir('cmad-log-writter'){
           sh 'mvn  package -DskipTests'
           archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
         }
