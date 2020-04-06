@@ -55,7 +55,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>vijay-logger-service</finalName>
+		<finalName>vijay-logreader-service</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
