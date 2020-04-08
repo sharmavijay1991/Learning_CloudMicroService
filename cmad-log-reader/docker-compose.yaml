@@ -1,0 +1,21 @@
+version: "3.7"
+
+services:
+  logreader:
+    image: sharmavijay1991/logreader
+    ports:
+      - 8082
+    depends_on:
+      - logwriter
+
+  logwriter:
+    image: sharmavijay1991/logwriter
+    ports:
+      - 8081
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo
+    ports:
+      - "27017:27017"
