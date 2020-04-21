@@ -30,29 +30,18 @@ public class LogWriteController {
 	private LogEntryRepo repository;
 	
 	@RequestMapping(path="/log/{id}", method = RequestMethod.POST)
-	public ResponseEntity<String> create(@RequestBody LogEntry log, @PathVariable int id)
+	public ResponseEntity<String> create(@RequestBody LogEntry log, @PathVariable String id)
 	{
-		String incoming_date = null;
 		String new_id = null;
-		String format_str = "yyyy-MM-dd HH:mm:ss";
-		SimpleDateFormat sdf = new SimpleDateFormat(format_str);
-		
-		System.out.println(" ##### Got for ID: " + id);
+
 		try {
-			incoming_date = log.getId();
-			Date dt = sdf.parse(incoming_date);
-			Calendar calendar = Calendar.getInstance();
-			calendar.setTime(dt);
-			System.out.println(" ##### new ID: " + calendar.toString());
-			calendar.set(13,0);	//13th field is seconds counting from YEAR [id="Asia/Kolkata",offset=19800000,dstSavings=0,useDaylight=false,transitions=7,lastRule=null],firstDayOfWeek=1,minimalDaysInFirstWeek=1,ERA=1,YEAR=2020,MONTH=1,WEEK_OF_YEAR=8,WEEK_OF_MONTH=4,DAY_OF_MONTH=19,DAY_OF_YEAR=50,DAY_OF_WEEK=4,DAY_OF_WEEK_IN_MONTH=3,AM_PM=1,HOUR=4,HOUR_OF_DAY=16,MINUTE=18,SECOND=3,MILLISECOND=0,ZONE_OFFSET=19800000,DST_OFFSET=0]
-			System.out.println(" ##### new ID after modification: " + calendar.toString());
-			long epoc_time = calendar.getTimeInMillis();
-			//long epoc_time = dt.getTime();
+			long epoc_time = getEpocTime(log);
 			new_id = id + "_" + epoc_time;
-			log.setId(new_id);
 			
+			LogDBEntry logdb = new LogDBEntry();
 			
-			repository.save(log);
+			PrepareDBEntry(log, logdb, new_id);			
+			repository.save(logdb);
 			
 			return new ResponseEntity<String> (new_id, HttpStatus.CREATED);
 		}
@@ -62,5 +51,69 @@ public class LogWriteController {
 		}
 		
 	}
+
+	private long getEpocTime(LogEntry log) {
+		String incoming_date = null;
+		String format_str = "yyyy-MM-dd HH:mm:ss";
+		incoming_date = log.getId();
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat(format_str);
+			Date dt = sdf.parse(incoming_date);
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(dt);
+			long epoc_time = calendar.getTimeInMillis();
+			return(epoc_time);
+		}
+		catch(Exception e){
+			return 0;
+		}
+	}
+
+	private void PrepareDBEntry(LogEntry log, LogDBEntry logdb, String new_id) {
+		/* 
+		 * Populate fields => 
+		 * String id;
+		 * String log_line;
+		 * String log_time;
+		 * String device_id;
+		 * String device_name;
+		 * String process_name;
+		 * int process_id;
+		*/
+		logdb.setId(new_id);
+		logdb.setLog_line(log.getLog_line());
+		logdb.setLog_time(getLogTime(log.getLog_line()));
+		logdb.setDevice_id(getDeviceID(log.getLog_line()));
+		logdb.setDevice_name(getDeviceName(log.getLog_line()));
+		logdb.setProcess_name(getProcessName(log.getLog_line()));
+		logdb.setProcess_id(getProcessID(log.getLog_line()));
+		
+	}
+
+	private int getProcessID(String log_line) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	private String getProcessName(String log_line) {
+		// TODO Auto-generated method stub
+		return "";
+	}
+
+	private String getDeviceName(String log_line) {
+		// TODO Auto-generated method stub
+		return "";
+	}
+
+	private String getDeviceID(String log_line) {
+		// TODO Auto-generated method stub
+		return "";
+	}
+
+	private String getLogTime(String log_line) {
+		// TODO Auto-generated method stub
+		return "";
+	}
+	
 
 }

@@ -22,5 +22,7 @@ public class LogEntry {
 		this.log_line = log_line;
 	}
 	
+	
+
 
 }
