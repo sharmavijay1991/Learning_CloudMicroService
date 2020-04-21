@@ -1,0 +1,3 @@
+LogTafficGenerator.py =>
+        it will automatically send REST request to server on "localhost:8081".
+        Currently it will send only 3 requests.
