@@ -1,6 +1,8 @@
 package com.vijay.cmad;
 
 
+import java.util.Date;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -14,7 +16,14 @@ public class LogDBEntry {
 	private String device_name;
 	private String process_name;
 	private int process_id;
+	private Date process_time;
 	
+	public Date getProcess_time() {
+		return process_time;
+	}
+	public void setProcess_time(Date process_time) {
+		this.process_time = process_time;
+	}
 	public String getId() {
 		return id;
 	}

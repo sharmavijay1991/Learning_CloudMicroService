@@ -40,7 +40,7 @@ public class LogWriteController {
 			
 			LogDBEntry logdb = new LogDBEntry();
 			
-			PrepareDBEntry(log, logdb, new_id);			
+			PrepareDBEntry(log, logdb, new_id,id);			
 			repository.save(logdb);
 			
 			return new ResponseEntity<String> (new_id, HttpStatus.CREATED);
@@ -69,7 +69,7 @@ public class LogWriteController {
 		}
 	}
 
-	private void PrepareDBEntry(LogEntry log, LogDBEntry logdb, String new_id) {
+	private void PrepareDBEntry(LogEntry log, LogDBEntry logdb, String new_id, String id) {
 		/* 
 		 * Populate fields => 
 		 * String id;
@@ -80,39 +80,53 @@ public class LogWriteController {
 		 * String process_name;
 		 * int process_id;
 		*/
+		Date process_time = new Date();
 		logdb.setId(new_id);
 		logdb.setLog_line(log.getLog_line());
 		logdb.setLog_time(getLogTime(log.getLog_line()));
-		logdb.setDevice_id(getDeviceID(log.getLog_line()));
+		logdb.setDevice_id(id);
 		logdb.setDevice_name(getDeviceName(log.getLog_line()));
 		logdb.setProcess_name(getProcessName(log.getLog_line()));
 		logdb.setProcess_id(getProcessID(log.getLog_line()));
+		logdb.setProcess_time(process_time);
 		
+	}
+	
+	private String splitAndGetForIndex(String log_line, String pattern, int index) {
+		String[] splited = log_line.split(pattern);
+		return splited[index];
 	}
 
 	private int getProcessID(String log_line) {
-		// TODO Auto-generated method stub
-		return 0;
+		String pname_pid = splitAndGetForIndex(log_line,"\\s+", 4);
+		String pid_first = splitAndGetForIndex(pname_pid,"\\[", 1);
+		String pid = splitAndGetForIndex(pid_first,"\\]", 0);
+		//System.out.println("PID:"+pid);
+		return(Integer.parseInt(pid));
+		
+		//return 0;
 	}
 
 	private String getProcessName(String log_line) {
-		// TODO Auto-generated method stub
-		return "";
+		String pname_pid = splitAndGetForIndex(log_line,"\\s+", 4);
+		String pname = splitAndGetForIndex(pname_pid,"\\[", 0);
+		//System.out.println("PName:"+pname);
+		return pname;
 	}
 
 	private String getDeviceName(String log_line) {
-		// TODO Auto-generated method stub
-		return "";
+		String device_name = splitAndGetForIndex(log_line,"\\s+", 3);
+		//System.out.println("DeviceName:"+device_name);
+		return device_name;
 	}
 
-	private String getDeviceID(String log_line) {
-		// TODO Auto-generated method stub
-		return "";
-	}
 
 	private String getLogTime(String log_line) {
-		// TODO Auto-generated method stub
-		return "";
+		String month = splitAndGetForIndex(log_line,"\\s+", 0);
+		String date = splitAndGetForIndex(log_line,"\\s+", 1);
+		String time = splitAndGetForIndex(log_line,"\\s+", 2);
+		//System.out.println("DateTime:"+month+" "+date+" "+time);
+		return (month+" "+date +" "+time);
 	}
 	
 
