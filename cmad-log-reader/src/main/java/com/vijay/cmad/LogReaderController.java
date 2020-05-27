@@ -3,9 +3,14 @@ package com.vijay.cmad;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mongodb.BasicDBObject;
+import com.mongodb.BasicDBObjectBuilder;
+
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Calendar;
+//import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -32,9 +37,36 @@ public class LogReaderController {
 	private LogEntryRepo repository;
 	
 	@RequestMapping(path="/log/{id}", method = RequestMethod.GET)
-	public ResponseEntity<List<LogEntry>> read(@RequestBody Query req_data, @PathVariable int id)
+	public ResponseEntity<List<LogDBEntry>> read(@RequestBody Query req_data, @PathVariable int id)
 	{	
 		String incoming_date = null;
+		List<LogDBEntry> result = new ArrayList<LogDBEntry>();
+		incoming_date = req_data.getStart_time();
+		String lookback = req_data.getLookback_duration();
+		String date_format = "yyyy-MM-dd HH:mm:ss";
+		//BasicDBObject query = new BasicDBObject();
+		
+		try {
+			if(incoming_date != "") {
+				Date lookup_end_date = get_date(date_format,incoming_date);
+				Date lookup_start_date = calculate_date_using_lookback(lookup_end_date, lookback);
+				BasicDBObject logdb_query = new BasicDBObject();
+				logdb_query.put("process_time", BasicDBObjectBuilder.start("$gte", lookup_start_date).add("$lte", lookup_end_date).get());
+				
+				
+				//result = (List<LogDBEntry>) repository.findAllByQuery(logdb_query);
+				result = (List<LogDBEntry>) repository.findByProcess_timeBetween(lookup_start_date,lookup_end_date);
+				
+			}
+			return new ResponseEntity<List<LogDBEntry>> (result, HttpStatus.CREATED);
+
+		}
+		catch (Exception ex){
+			return new ResponseEntity<List<LogDBEntry>> (result, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
+		/** Removed to Try MongoBasedQueries
+		
 		String new_id = null;
 		String format_str = "yyyy-MM-dd HH:mm:ss";
 		SimpleDateFormat sdf = new SimpleDateFormat(format_str);
@@ -67,7 +99,26 @@ public class LogReaderController {
 		{
 			return new ResponseEntity<List<LogEntry>> (result, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
+		*/
 		
+	}
+	
+	public Date calculate_date_using_lookback(Date end_date, String lookback) {
+		LocalDateTime ldt = LocalDateTime.ofInstant(end_date.toInstant(), ZoneId.systemDefault());
+		LocalDateTime return_ldt = ldt.minusMinutes(Integer.parseInt(lookback));
+		return(Date.from(return_ldt.atZone(ZoneId.systemDefault()).toInstant()));
+	}
+	
+	public Date get_date(String format, String date) {
+		SimpleDateFormat formatter = new SimpleDateFormat(format);
+		try {
+			Date dt = formatter.parse(date);
+			return dt;
+		}
+		catch(Exception ex) {
+			Date dt = new Date();
+			return dt;
+		}
 	}
 
 }
