@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository;
 public interface LogEntryRepo extends MongoRepository<LogDBEntry, String> {
 
 	
-	List<LogDBEntry> findByProcess_timeBetween(Date lookup_start_date, Date lookup_end_date) ;
+	//List<LogDBEntry> findByProcess_timeBetween(Date lookup_start_date, Date lookup_end_date) ;
 	/*{
 		//TODO it should work.
 		LogDBEntry entity;

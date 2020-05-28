@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
-//import java.util.Calendar;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -37,8 +37,9 @@ public class LogReaderController {
 	private LogEntryRepo repository;
 	
 	@RequestMapping(path="/log/{id}", method = RequestMethod.GET)
-	public ResponseEntity<List<LogDBEntry>> read(@RequestBody Query req_data, @PathVariable int id)
+	public ResponseEntity<List<LogDBEntry>> read(@RequestBody Query req_data, @PathVariable String id)
 	{	
+		/*
 		String incoming_date = null;
 		List<LogDBEntry> result = new ArrayList<LogDBEntry>();
 		incoming_date = req_data.getStart_time();
@@ -56,6 +57,7 @@ public class LogReaderController {
 				
 				//result = (List<LogDBEntry>) repository.findAllByQuery(logdb_query);
 				result = (List<LogDBEntry>) repository.findByProcess_timeBetween(lookup_start_date,lookup_end_date);
+				//repository.find
 				
 			}
 			return new ResponseEntity<List<LogDBEntry>> (result, HttpStatus.CREATED);
@@ -65,13 +67,14 @@ public class LogReaderController {
 			return new ResponseEntity<List<LogDBEntry>> (result, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
-		/** Removed to Try MongoBasedQueries
-		
+		*/
+		//Removed to Try MongoBasedQueries
+		String incoming_date = null;
 		String new_id = null;
 		String format_str = "yyyy-MM-dd HH:mm:ss";
 		SimpleDateFormat sdf = new SimpleDateFormat(format_str);
 		List<String> query_ids = new ArrayList<String>();
-		List<LogEntry> result = new ArrayList<LogEntry>();
+		List<LogDBEntry> result = new ArrayList<LogDBEntry>();
 		
 		System.out.println(" Debug: [ ID: " + id +" ]");
 		try {
@@ -80,26 +83,31 @@ public class LogReaderController {
 			Date dt = sdf.parse(incoming_date);
 			Calendar calendar = Calendar.getInstance();
 			calendar.setTime(dt);
-			calendar.set(13,0);	
-			query_ids.add(id + "_" + (calendar.getTimeInMillis() + (60000)));
-			for(int index =0; index < Integer.parseInt(req_data.getLookback_duration()); index++)
+			//calendar.set(13,0);	
+			//query_ids.add(id + "_" + (calendar.getTimeInMillis() + (60000)));
+			//for(int index =0; index < Integer.parseInt(req_data.getLookback_duration()); index++)
+			for(int index =0; index < (Integer.parseInt(req_data.getLookback_duration())*60); index++)
 			{
-				long epoc_time = (calendar.getTimeInMillis() - (60000 * index));
+				//long epoc_time = (calendar.getTimeInMillis() - (60000 * index));
+				long epoc_time = (calendar.getTimeInMillis() - (index * 1000));
 				new_id = id +"_" + epoc_time;
 				query_ids.add(new_id);
 			}
 
 			System.out.println("Debug: [Query list size: " + query_ids.size() +" ]");
-			result = (List<LogEntry>) repository.findAllById(query_ids);
+			for(int i=0; i<query_ids.size();i++) {
+				System.out.println(query_ids.get(i));
+			}
+			result = (List<LogDBEntry>) repository.findAllById(query_ids);
 			System.out.println("Debug: [Output list size: " + result.size() + " ]");
 			
-			return new ResponseEntity<List<LogEntry>> (result, HttpStatus.CREATED);
+			return new ResponseEntity<List<LogDBEntry>> (result, HttpStatus.CREATED);
 		}
 		catch (Exception e)
 		{
-			return new ResponseEntity<List<LogEntry>> (result, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<List<LogDBEntry>> (result, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		*/
+		
 		
 	}
 	
