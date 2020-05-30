@@ -82,13 +82,13 @@ public class LogWriteController {
 		*/
 		Date process_time = new Date();
 		logdb.setId(new_id);
-		logdb.setLog_line(log.getLog_line());
-		logdb.setLog_time(getLogTime(log.getLog_line()));
-		logdb.setDevice_id(id);
-		logdb.setDevice_name(getDeviceName(log.getLog_line()));
-		logdb.setProcess_name(getProcessName(log.getLog_line()));
-		logdb.setProcess_id(getProcessID(log.getLog_line()));
-		logdb.setProcess_time(process_time);
+		logdb.setLogline(log.getLog_line());
+		logdb.setLogtime(getLogTime(log.getLog_line()));
+		logdb.setDeviceid(id);
+		logdb.setDevicename(getDeviceName(log.getLog_line()));
+		logdb.setProcessname(getProcessName(log.getLog_line()));
+		logdb.setProcessid(getProcessID(log.getLog_line()));
+		logdb.setProcesstime(process_time);
 		
 	}
 	
